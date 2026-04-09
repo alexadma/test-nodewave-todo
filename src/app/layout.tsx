@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Sora, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Sora, DM_Sans } from "next/font/google";
-
 
 const sora = Sora({
   subsets: ["latin"],
@@ -29,11 +27,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${dmSans.variable} font-sans antialiased`}>
+      <body className={`${sora.variable} ${dmSans.variable} font-sans antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
   );
-
-  
 }
