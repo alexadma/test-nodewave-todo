@@ -12,13 +12,12 @@ export function useLogin() {
   return useMutation({
     mutationFn: (payload: LoginPayload) => authService.login(payload),
     onSuccess: (data) => {
-      setAuth(data.user, data.token);
+      setAuth(data.content.user, data.content.token);
       toast.success("Login berhasil! Selamat datang 👋");
       router.push("/todos");
     },
     onError: (error: any) => {
-      const message =
-        error?.response?.data?.message || "Login gagal. Coba lagi.";
+      const message = error?.response?.data?.message || "Login gagal. Coba lagi.";
       toast.error(message);
     },
   });
@@ -31,13 +30,12 @@ export function useRegister() {
   return useMutation({
     mutationFn: (payload: RegisterPayload) => authService.register(payload),
     onSuccess: (data) => {
-      setAuth(data.user, data.token);
+      setAuth(data.content.user, data.content.token);
       toast.success("Registrasi berhasil! Selamat datang 🎉");
       router.push("/todos");
     },
     onError: (error: any) => {
-      const message =
-        error?.response?.data?.message || "Registrasi gagal. Coba lagi.";
+      const message = error?.response?.data?.message || "Registrasi gagal. Coba lagi.";
       toast.error(message);
     },
   });

@@ -8,8 +8,6 @@ const DEFAULT_HOME = "/todos";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Read token from cookies (zustand persist uses localStorage,
-  // so we check cookie fallback or rely on client-side guard)
   const authStorage = request.cookies.get("auth-storage")?.value;
 
   let isAuthenticated = false;
