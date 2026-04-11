@@ -14,7 +14,7 @@ export function TodosContent() {
   const isCalendarView = view === "calendar";
 
   const [filters, setFilters] = useState<TodoFilters>({
-    status: "all",
+    isDone: "all",
     search: "",
     page: 1,
     limit: 10,
@@ -27,9 +27,7 @@ export function TodosContent() {
           {isCalendarView ? "📅 Kalender Todo" : "📋 Todo Saya"}
         </h1>
         <p className="text-slate-500 text-sm mt-1">
-          {isCalendarView
-            ? "Lihat todo berdasarkan tanggal"
-            : "Kelola semua tugas harianmu"}
+          {isCalendarView ? "Lihat todo berdasarkan tanggal" : "Kelola semua tugas harianmu"}
         </p>
       </div>
 

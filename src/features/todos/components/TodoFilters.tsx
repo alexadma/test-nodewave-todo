@@ -1,8 +1,6 @@
 "use client";
-
 import { useCallback } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
 import { clsx } from "clsx";
 import type { TodoFilters } from "@/types/todo.types";
@@ -14,8 +12,8 @@ interface Props {
 
 const STATUS_OPTIONS = [
   { label: "Semua", value: "all" },
-  { label: "Aktif", value: "pending" },
-  { label: "Selesai", value: "completed" },
+  { label: "Aktif", value: "false" },
+  { label: "Selesai", value: "true" },
 ] as const;
 
 export function TodoFiltersBar({ filters, onFiltersChange }: Props) {
@@ -27,8 +25,9 @@ export function TodoFiltersBar({ filters, onFiltersChange }: Props) {
   );
 
   const handleStatus = useCallback(
-    (status: string) => {
-      onFiltersChange({ ...filters, status: status as any, page: 1 });
+    (value: string) => {
+      const isDone = value === "all" ? "all" : value === "true";
+      onFiltersChange({ ...filters, isDone, page: 1 });
     },
     [filters, onFiltersChange]
   );
@@ -36,6 +35,9 @@ export function TodoFiltersBar({ filters, onFiltersChange }: Props) {
   const clearSearch = () => {
     onFiltersChange({ ...filters, search: "", page: 1 });
   };
+
+  const currentValue =
+    filters.isDone === "all" ? "all" : filters.isDone ? "true" : "false";
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
@@ -66,7 +68,7 @@ export function TodoFiltersBar({ filters, onFiltersChange }: Props) {
             onClick={() => handleStatus(opt.value)}
             className={clsx(
               "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
-              filters.status === opt.value
+              currentValue === opt.value
                 ? "bg-white text-violet-700 shadow-sm"
                 : "text-slate-500 hover:text-slate-700"
             )}

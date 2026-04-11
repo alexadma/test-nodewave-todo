@@ -1,40 +1,34 @@
-export type TodoStatus = "pending" | "completed";
-
 export interface Todo {
   id: string;
-  title: string;
-  description?: string;
-  status: TodoStatus;
-  dueDate?: string;
+  item: string;
+  isDone: boolean;
   createdAt: string;
   updatedAt: string;
   userId: string;
 }
 
 export interface CreateTodoPayload {
-  title: string;
-  description?: string;
-  dueDate?: string;
+  item: string;
 }
 
 export interface UpdateTodoPayload {
-  title?: string;
-  description?: string;
-  status?: TodoStatus;
-  dueDate?: string;
+  item?: string;
+  isDone?: boolean;
 }
 
 export interface TodoFilters {
-  status?: TodoStatus | "all";
+  isDone?: boolean | "all";
   search?: string;
   page?: number;
   limit?: number;
 }
 
 export interface TodosResponse {
-  data: Todo[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  content: {
+    entries: Todo[];
+    totalData: number;
+    totalPage: number;
+  };
+  message: string;
+  errors: [];
 }

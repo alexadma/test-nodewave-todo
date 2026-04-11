@@ -28,8 +28,8 @@ export function TodoList({ filters, onFiltersChange }: Props) {
     );
   }
 
-  const todos = data?.data ?? [];
-  const totalPages = data?.totalPages ?? 1;
+  const todos = data?.content?.entries ?? [];
+  const totalPages = data?.content?.totalPage ?? 1;
   const currentPage = filters.page ?? 1;
 
   if (todos.length === 0) {
@@ -48,7 +48,6 @@ export function TodoList({ filters, onFiltersChange }: Props) {
         <TodoItem key={todo.id} todo={todo} />
       ))}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-4">
           <p className="text-sm text-slate-500">
@@ -60,9 +59,7 @@ export function TodoList({ filters, onFiltersChange }: Props) {
               size="sm"
               className="rounded-xl"
               disabled={currentPage <= 1}
-              onClick={() =>
-                onFiltersChange({ ...filters, page: currentPage - 1 })
-              }
+              onClick={() => onFiltersChange({ ...filters, page: currentPage - 1 })}
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
@@ -71,9 +68,7 @@ export function TodoList({ filters, onFiltersChange }: Props) {
               size="sm"
               className="rounded-xl"
               disabled={currentPage >= totalPages}
-              onClick={() =>
-                onFiltersChange({ ...filters, page: currentPage + 1 })
-              }
+              onClick={() => onFiltersChange({ ...filters, page: currentPage + 1 })}
             >
               <ChevronRight className="w-4 h-4" />
             </Button>

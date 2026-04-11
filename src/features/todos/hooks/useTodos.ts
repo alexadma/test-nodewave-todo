@@ -19,7 +19,7 @@ export function useTodos(filters: TodoFilters = {}) {
     queryKey: TODO_KEYS.list(filters),
     queryFn: () => todoService.getAll(filters),
     placeholderData: keepPreviousData,
-    staleTime: 1000 * 60 * 2, // 2 minutes
+    staleTime: 1000 * 60 * 2,
   });
 }
 
@@ -58,36 +58,36 @@ export function useToggleTodo() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: string }) =>
-      todoService.toggleStatus(id, status),
-    onMutate: async ({ id, status }) => {
-      // Optimistic update
+    mutationFn: ({ id, isDone }: { id: string; isDone: boolean }) =>
+      todoService.toggleDone(id, isDone),
+
+    onMutate: async ({ id, isDone }) => {
       await qc.cancelQueries({ queryKey: TODO_KEYS.lists() });
-      const prev = qc.getQueriesData({ queryKey: TODO_KEYS.lists() });
+      const previousData = qc.getQueriesData({ queryKey: TODO_KEYS.lists() });
 
       qc.setQueriesData({ queryKey: TODO_KEYS.lists() }, (old: any) => {
-        if (!old?.data) return old;
+        if (!old?.content?.entries) return old;
         return {
           ...old,
-          data: old.data.map((todo: any) =>
-            todo.id === id
-              ? {
-                  ...todo,
-                  status: status === "completed" ? "pending" : "completed",
-                }
-              : todo
-          ),
+          content: {
+            ...old.content,
+            entries: old.content.entries.map((todo: any) =>
+              todo.id === id ? { ...todo, isDone } : todo
+            ),
+          },
         };
       });
 
-      return { prev };
+      return { previousData };
     },
-    onError: (_err, _vars, ctx) => {
-      if (ctx?.prev) {
-        ctx.prev.forEach(([key, data]) => qc.setQueryData(key, data));
-      }
+
+    onError: (_error, _, context) => {
+      context?.previousData?.forEach(([queryKey, data]) => {
+        qc.setQueryData(queryKey, data);
+      });
       toast.error("Gagal mengubah status todo.");
     },
+
     onSettled: () => {
       qc.invalidateQueries({ queryKey: TODO_KEYS.lists() });
     },
